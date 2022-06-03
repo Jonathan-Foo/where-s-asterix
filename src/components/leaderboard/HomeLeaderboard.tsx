@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { Link } from 'react-router-dom'
 
 interface HomeLeaderboardProps {
 
@@ -12,7 +13,7 @@ export const HomeLeaderboard: React.FC<HomeLeaderboardProps> = ({}) => {
                 <p>Do you have what it takes?</p>
                 <p>View the leaderboards!</p>
             </div>
-            <p>View Leaderboard</p>
+            <LeaderboardLink to='/leaderboard'><p>View Leaderboard</p></LeaderboardLink>
         </AdWrapper>
     );
 }
@@ -44,29 +45,27 @@ const AdWrapper = styled.div`
         }
     }
 
-    & > p {
-        font-size: 1.4em;
-        color: white;
-        padding-inline: 1.5em;
-        padding-block: .5em;
-        background-color: ${({theme}) => theme.color.mainBlue};
-        border-radius: 10px;
-        cursor: pointer;
-        text-align: center;
-
-        &:hover {
-            background-color: ${({theme}) => theme.color.darkBlue};
-        }
-
-        @media (max-width: 750px) {
-            font-size: 1em;
-        }
-    }
-
-
     @media (max-width: 750px) {
         gap: 10%;
         padding-block: 2em;
     }
 `
 
+const LeaderboardLink = styled(Link)`
+    font-size: 1.4em;
+    color: white;
+    padding-inline: 1.5em;
+    padding-block: .5em;
+    background-color: ${({theme}) => theme.color.mainBlue};
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+
+    &:hover {
+        background-color: ${({theme}) => theme.color.darkBlue};
+    }
+
+    @media (max-width: 750px) {
+        font-size: 1em;
+    }
+`

@@ -22,6 +22,8 @@ export const Home: React.FC<HomeProps> = ({}) => {
     );
 }
 
+export default Home;
+
 const Main = styled.div`
     display: flex;
     flex-direction: column;

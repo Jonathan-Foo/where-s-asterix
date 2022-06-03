@@ -1,56 +1,72 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import GameHeader from '../components/GameHeader'
-import {Level} from '../hook/levels'
-import level1 from '../assets/page1.png'
-import level2 from '../assets/page2.png'
-import level3 from '../assets/page3.png'
-import level4 from '../assets/page4.png'
-import level5 from '../assets/page5.png'
-import level6 from '../assets/page6.png'
 import { useLocation } from 'react-router-dom' 
 import { Level as levelInt, info } from '../hook/levels'
+import Dropdown from '../components/modal/Dropdown'
+import SubmitScore from '../components/modal/SubmitScore'
+import LevelImage from '../components/grid/LevelImage'
+import OutsideClickHandler from 'react-outside-click-handler';
+import useGame from '../hook/useGame'
+
 
 interface GameProps {
    
 }
 
 export const Game: React.FC<GameProps> = () => {
+    const [ showDropdown, hideDropdown, dropdownCoord, imageClickHandler, setTargetNumber, foundCheck, gameOver, setlevel, dropdownHandler] = useGame();
+
     const location = useLocation().state as levelInt
     const {level, id, target} = location === null ? info[0] : location 
 
-    const src = level === 1 ? level1 :
-                level === 2 ? level2 :
-                level === 3 ? level3 :
-                level === 4 ? level4 :
-                level === 5 ? level5 :
-                level6
-    
+    useEffect(() => {
+        setTargetNumber(target.length);
+        setlevel(level);
+    }, [])
+
+
     return (
-        <>
-        <GameHeader target={target}/>
-        <GameArea>
-            <img src={src} alt={`Level ${level}`} />
-        </GameArea>
-        </>
+        <GameWrapper>
+            <GameHeader target={target} foundCheck={foundCheck}/>
+            <GameArea>
+                <OutsideClickHandler onOutsideClick={hideDropdown}>
+                <Cover>
+                    <LevelImage level={level} onClick={(e) => imageClickHandler(e)}/>
+                    <Dropdown target={target} show={showDropdown} dropdownCoord={dropdownCoord} dropdownHandler={dropdownHandler}/>
+                </Cover>
+                </OutsideClickHandler>
+            </GameArea>
+            <SubmitScore time={10.00} show={gameOver}/>
+
+        </GameWrapper>
     );
 }
+
+export default Game;
+
+const GameWrapper = styled.div`
+    position: relative;
+    min-height: 100vh;
+
+`
+
+const Cover = styled.div`
+    position: relative;
+
+    & > :first-child {
+        width: 100%;
+
+        @media (max-width: 750px) {
+            width: 100%;
+        }
+    }
+`
 
 const GameArea = styled.div`
     padding: 1em;
     display: flex;
     justify-content: center;
     align-items: center;
-
-    img {
-        width: 80%;
-        
-        @media (max-width: 750px) {
-            width: 100%;
-        }
-    }
-
-    @media (max-width: 750px) {
-
-    }
+    
 `

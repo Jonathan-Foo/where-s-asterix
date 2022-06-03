@@ -1,20 +1,25 @@
 import React from 'react'
 import Icon from './grid/Icon'
-import styled from 'styled-components'
+import styled, {css} from 'styled-components'
 import {Link} from 'react-router-dom'
 
 
 interface GameHeaderProps {
     target: [asterix: string, obelix: string, dogmatix?: string];
+    foundCheck: (name: string) => boolean;
+}
+
+interface StyledInt {
+    found: boolean;
 }
 
 
-export const GameHeader: React.FC<GameHeaderProps> = ({ target }) => {
+export const GameHeader: React.FC<GameHeaderProps> = ({ target, foundCheck }) => {
     
     const icons = target.map((name, index) => {
         return ( 
-                <HeaderIcon key={index}>
-                    <Icon name={name} />
+                <HeaderIcon key={index} found={foundCheck(name!)}>
+                    <Icon name={name} found={true}/>
                     <p>{name}</p>
                 </HeaderIcon>
             )
@@ -38,7 +43,7 @@ const StyledLink  = styled(Link)`
     padding-inline: 1.5em;
     padding-block: .5em;
     background-color: ${({theme}) => theme.color.mainBlue};
-    border-radius: 10px;
+    border-radius: 5px;
     cursor: pointer;
 
     &:hover {
@@ -50,7 +55,7 @@ const StyledLink  = styled(Link)`
     }
 
 `
-const HeaderIcon = styled.div`
+const HeaderIcon = styled.div<StyledInt>`
     display: flex;
     flex-direction: column;
     width: 9%;
@@ -65,6 +70,14 @@ const HeaderIcon = styled.div`
         width: 15%;
         font-size: .7em;
     }
+
+    ${({found}) => 
+        found && 
+            css`
+                opacity: 0.3;
+            `
+    }
+
 `
 
 
@@ -77,7 +90,6 @@ const HeaderWrapper = styled.div`
     box-shadow: 0 2px 5px hsl(0, 0%, 90%);
     gap: .5em;
     color: ${({theme}) => theme.color.mainGray};
-
 
 `
 

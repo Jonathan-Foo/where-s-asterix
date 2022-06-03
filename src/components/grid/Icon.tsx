@@ -2,14 +2,16 @@ import React from 'react'
 import asterix from '../../assets/icon1.png';
 import obelix from '../../assets/icon2.png';
 import dogmatix from '../../assets/icon3.png';
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 
 interface IconsProps {
-    name: string | undefined; 
+    name: string | undefined;
+    found?: boolean; 
 }
 
-export const Icon: React.FC<IconsProps> = ({ name }) => {
+
+export const Icon: React.FC<IconsProps> = ({ name, found }) => {
     const src = name === 'asterix' ? asterix :
                 name === 'obelix' ? obelix :
                 dogmatix

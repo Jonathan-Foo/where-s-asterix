@@ -1,25 +1,24 @@
 import React from 'react'
-import styled from 'styled-components'
-import level1 from '../../assets/page1.png'
-import level2 from '../../assets/page2.png'
-import level3 from '../../assets/page3.png'
-import level4 from '../../assets/page4.png'
-import level5 from '../../assets/page5.png'
-import level6 from '../../assets/page6.png'
+import styled, {css} from 'styled-components'
 import Icon from './Icon';
+import LevelImage from '../grid/LevelImage'
 
 interface CardProps {
     level: number;
     target: [asterix: string, obelix: string, dogmatix?: string];
+    showIcon: boolean;
+    active?: boolean;
 }
 
-export const Card: React.FC<CardProps> = ({level, target }) => {
-    const src = level === 1 ? level1 :
-                level === 2 ? level2 :
-                level === 3 ? level3 :
-                level === 4 ? level4 :
-                level === 5 ? level5 :
-                level6
+interface StyledComponents {
+    active?: boolean;
+    showIcon?: boolean;
+}
+
+
+
+
+export const Card: React.FC<CardProps> = ({level, target, showIcon, active}) => {
 
 
     const icons = target.map((name, index) => {
@@ -27,11 +26,11 @@ export const Card: React.FC<CardProps> = ({level, target }) => {
     })
     
     return (
-        <CardWrapper>
-            <LevelImg src={src} alt={`Level ${level}`} />
-            <InfoWrapper>
+        <CardWrapper active={false}>
+            <LevelImage level={level}/>
+            <InfoWrapper showIcon={showIcon}>
                 <p>Level {level}</p>
-                <IconWrapper>{icons}</IconWrapper>
+                { showIcon && <IconWrapper>{icons}</IconWrapper> }
             </InfoWrapper>
         </CardWrapper>
     );
@@ -39,19 +38,31 @@ export const Card: React.FC<CardProps> = ({level, target }) => {
 
 export default Card;
 
-const CardWrapper = styled.div`
+const CardWrapper = styled.div<StyledComponents>`
     display: flex:
     flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 100%;
+    // border: 1px solid red;
+
+    & > img {
+        width: 100%;
+    }
+
+    ${({active}) => 
+    active &&
+        css`
+            background-color: ${({theme}) => theme.color.darkBlue};
+            color: white;
+        `
+    }
+
 
 `
-const LevelImg = styled.img`
-    width: 100%;
-`
 
-const InfoWrapper = styled.div`
+
+const InfoWrapper = styled.div<StyledComponents>`
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -62,6 +73,23 @@ const InfoWrapper = styled.div`
         width: 50%;
         padding-left: .5em;
         font-size: 1.2em;
+
+        ${({showIcon}) => 
+            !showIcon &&
+                css`
+                text-align: center;
+                `
+    }
+
+        
+    }
+
+    ${({showIcon}) => 
+            !showIcon &&
+                css`
+                justify-content: center;
+                padding-bottom: .5em;
+                `
     }
 
 `

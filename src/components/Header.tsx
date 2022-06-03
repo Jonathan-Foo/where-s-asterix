@@ -1,6 +1,7 @@
 import React from 'react'
 import logo from '../assets/logo.png'
 import styled from 'styled-components'
+import { Link } from 'react-router-dom'
 
 interface HeaderProps {
 
@@ -9,7 +10,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({}) => {
     return (
         <HeaderWrapper>
-            <p>Where's Asterix?</p>
+            <Link to="/"><p>Where's Asterix?</p></Link>
             <img src={logo} alt="logo" draggable="false"/>
         </HeaderWrapper>
     );
