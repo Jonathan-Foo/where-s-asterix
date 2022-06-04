@@ -1,8 +1,10 @@
 import { useState } from "react";
 import firebase, {firestore} from "../firebase";
-import { getDoc } from "firebase/firestore";
+import { arrayUnion, getDoc, updateDoc } from "firebase/firestore";
 import inRange from "../helper/inRange";
-import useTimer from "@bradgarropy/use-timer/dist/types/useTimer";
+import useTimer from "@bradgarropy/use-timer"
+import { useNavigate } from "react-router";
+
 
 export const useGame = () => {
     const [level, setlevel] = useState<number>();
@@ -13,11 +15,20 @@ export const useGame = () => {
     const [gameOver, setGameOver] = useState<boolean>(false);
     const [targetNumber, setTargetNumber] = useState<number>();
     const [found, setFound] = useState<string[]>([]);
-    const stopWatch = useTimer();
+    const navigate = useNavigate();
+  
 
-    const starTimer = () => {
-        stopWatch.start()
+    const stopWatch = useTimer()
+
+    const startTimer = () => {
+        stopWatch.start();
     }
+    
+    const stopTimer = () => {
+        stopWatch.stop();
+        
+    }
+
 
     const clickCoordinates = (e: any) => {
         const top = Math.round((e.nativeEvent.offsetY / e.nativeEvent.target.offsetHeight) * 100);
@@ -35,7 +46,6 @@ export const useGame = () => {
         setclickCoord(coord);
         updatedropDownCoord(coord);
         setShowDropdown(true);
-
     }
 
     const hideDropdown = () => {
@@ -48,14 +58,15 @@ export const useGame = () => {
         const {top, left} = location[name];
         if (inRange(top, clickCoord!.top) && inRange(left, clickCoord!.left)) {
             setFound(prevFound => [...prevFound, name])
+            setShowDropdown(false)
         } else {
-            return 
+            setShowDropdown(false) 
         }
     }
 
     const fbLocationData = async () => {
         try {
-            const docRef = firestore.collection('game').doc(`level${level}`)
+            const docRef = firestore.collection('game').doc(`lvl${level}`)
             const docSnap = await getDoc(docRef);
             const {leaderboard, location} = docSnap.data()!
             return location;    
@@ -65,16 +76,32 @@ export const useGame = () => {
     }
 
     const gameOverCheck = () => {
-        return found.length === targetNumber! - 1 
+        if (found.length !== targetNumber!) return;
+        stopTimer();
+        setTime(stopWatch.elapsedTime / 1000);
+        setGameOver(true);
     }
 
 
     const foundCheck = (name: string) => {
         return found.indexOf(name) !== -1;
     } 
+    
 
-
-
+    const submitScore = async (name: string) => {
+        const Filter = require('bad-words');
+        const filter = new Filter();
+        const filteredName = filter.clean(name);
+        try {
+            const docRef = firestore.collection('game').doc(`lvl${level}`)
+            await updateDoc(docRef, {
+                leaderboard: arrayUnion({name: filteredName, time})
+            });
+            navigate('/leaderboard', {state: { level }});
+        }catch(error) {
+            console.error(error)
+        }
+    }
     
     return [
         showDropdown,
@@ -86,8 +113,11 @@ export const useGame = () => {
         gameOver,
         setlevel,
         dropdownHandler,
-    
-
+        startTimer,
+        time,
+        gameOverCheck,
+        found,
+        submitScore,
 
     ] as const; 
 }

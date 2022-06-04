@@ -56,6 +56,7 @@ const StyledLink  = styled(Link)`
 
 `
 const HeaderIcon = styled.div<StyledInt>`
+
     display: flex;
     flex-direction: column;
     width: 9%;
@@ -82,14 +83,18 @@ const HeaderIcon = styled.div<StyledInt>`
 
 
 const HeaderWrapper = styled.div`
+    position: sticky;
+    top: 0;
     display: flex;
     justify-content: space-around;
     align-items: center;
     padding-block: .5em;
     padding-inline: 1em;
-    box-shadow: 0 2px 5px hsl(0, 0%, 90%);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     gap: .5em;
     color: ${({theme}) => theme.color.mainGray};
+    z-index: 2;
+    background: #FFF;
 
 `
 

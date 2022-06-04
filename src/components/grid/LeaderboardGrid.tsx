@@ -4,14 +4,15 @@ import { info } from '../../hook/levels'
 import styled from 'styled-components'
 
 interface LeaderboardGridProps {
-
+    cardClickHandler:  (level: number) => Promise<void>;
+    activeLvl: number;
 }
 
-export const LeaderboardGrid: React.FC<LeaderboardGridProps> = ({}) => {
+export const LeaderboardGrid: React.FC<LeaderboardGridProps> = ({cardClickHandler, activeLvl }) => {
     const levels = info.map(levelInfo  => {
         return (
-            <CardWrapper>
-                <Card level={levelInfo.level} target={levelInfo.target} showIcon={false}/>
+            <CardWrapper key={levelInfo.id }onClick={() => cardClickHandler(levelInfo.level)}>
+                <Card level={levelInfo.level} target={levelInfo.target} showIcon={false} active={levelInfo.level === activeLvl}/>
             </CardWrapper>
         )
     })

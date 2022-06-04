@@ -1,29 +1,32 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled, { css } from 'styled-components'
+import { Link } from 'react-router-dom'
+  
 
 
 interface SubmitScoreProps {
     time: number;
     show: boolean;
+    submitScore: (name: string) => Promise<void>;
 }
 
 interface StyledProps {
     show: boolean;
 }
 
-export const SubmitScore: React.FC<SubmitScoreProps> = ({ time, show }) => {
-    const timeStr = time.toString()
-
+export const SubmitScore: React.FC<SubmitScoreProps> = ({ time, show, submitScore }) => {
+    const [username, setUsername] = useState<string>('');
+    
     return (
         <SubmitWrapper show={show}>
             <Overlay show={show}></Overlay>
             <ScoreWrapper show={show}>
                 <p>Level Completion Time:</p>
-                <Score>{timeStr} sec</Score>
-                <input type="text" placeholder='Name' />
+                <Score>{time} sec</Score>
+                <input type="text" placeholder='Name' value={username} onChange={(e) => {setUsername(e.target.value)}}/>
                 <Buttons>
-                    <button>Submit</button>
-                    <button>Cancel</button>
+                    <button onClick={() => submitScore(username)}>Submit</button>
+                    <CancelLink to='/'>Cancel</CancelLink>
                 </Buttons>
             </ScoreWrapper>
         </SubmitWrapper>
@@ -72,7 +75,7 @@ const ScoreWrapper = styled.div<StyledProps>`
     flex-direction: column;
     align-items: center;
     position: fixed;
-    top: 35%;
+    top: 30%;
     background-color: #FFF;
     padding-inline: 1em;
     padding-block: .5em;
@@ -127,6 +130,7 @@ const Buttons = styled.div`
         padding-block: .5em;
         border: none;
         border-radius: 5px;
+        cursor: pointer;
         
 
     }
@@ -141,9 +145,20 @@ const Buttons = styled.div`
         }
     }
 
-    & :last 
-    
+    & :last-child{
+        &:hover {
+            background-color: hsl(0, 0%, 85%);
+        }
+    }
+`
 
+const CancelLink = styled(Link)`
+    font-size: .5em;
+    appearance: none;
+    padding-inline: 1em;
+    padding-block: .5em;
+    border: none;
+    border-radius: 5px; 
 `
 
 

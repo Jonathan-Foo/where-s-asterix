@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import styled from 'styled-components'
@@ -6,14 +6,30 @@ import { info } from '../hook/levels'
 import LeaderboardGrid from '../components/grid/LeaderboardGrid'
 import LevelLeaderBoard from '../components/leaderboard/LevelLeaderboard'
 import { Link } from 'react-router-dom';
+import useLeaderboard from '../hook/useLeaderboard'
+import {useLocation} from 'react-router-dom';
 
 
 interface LeaderboardProps {
-
+    
 }
 
-export const Leaderboard: React.FC<LeaderboardProps> = ({}) => {
-    const testLeaderboard = [{name: 'bob', time: 2.23}, {name: 'steve', time: 2.13}, {name: 'joe', time: 2.20}]
+export const Leaderboard: React.FC<LeaderboardProps> = ({  }) => {
+    const [setActiveLvl, cardClickHandler, boardInfo, activeLvl, refreshBoard, setBoardInfo] = useLeaderboard(); 
+    const location = useLocation().state as {level: number | null}
+    const prevLevel = location === null ? 1 : location.level 
+    
+
+    useEffect(() => {
+        cardClickHandler(activeLvl);
+    }, [activeLvl]);
+
+
+    useEffect(() => {
+        cardClickHandler(prevLevel!);
+        console.log('triggered')
+    }, []);
+
 
     return (
         <>
@@ -23,11 +39,11 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({}) => {
                 <p>Global Leaderboards</p>
                 <div>
                     <HomeLink to='/'><p>Home</p></HomeLink>
-                    <Link to='/game'><p>Play</p></Link>
+                    <Link to='/game' state={info[activeLvl! - 1]}><p>Play</p></Link>
                 </div>
             </Title>
-            <LeaderboardGrid />
-            <LevelLeaderBoard leaderboard={testLeaderboard}/>
+            <LeaderboardGrid cardClickHandler={cardClickHandler} activeLvl={activeLvl}/>
+            <LevelLeaderBoard leaderboard={boardInfo}/>
         </Content>
         <Footer />
         </>

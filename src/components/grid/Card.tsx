@@ -26,7 +26,7 @@ export const Card: React.FC<CardProps> = ({level, target, showIcon, active}) => 
     })
     
     return (
-        <CardWrapper active={false}>
+        <CardWrapper active={active}>
             <LevelImage level={level}/>
             <InfoWrapper showIcon={showIcon}>
                 <p>Level {level}</p>

@@ -15,7 +15,9 @@ interface GameProps {
 }
 
 export const Game: React.FC<GameProps> = () => {
-    const [ showDropdown, hideDropdown, dropdownCoord, imageClickHandler, setTargetNumber, foundCheck, gameOver, setlevel, dropdownHandler] = useGame();
+    const [ showDropdown, hideDropdown, dropdownCoord, imageClickHandler, setTargetNumber, 
+            foundCheck, gameOver, setlevel, dropdownHandler, startTimer, time, gameOverCheck, 
+            found, submitScore] = useGame();
 
     const location = useLocation().state as levelInt
     const {level, id, target} = location === null ? info[0] : location 
@@ -23,7 +25,12 @@ export const Game: React.FC<GameProps> = () => {
     useEffect(() => {
         setTargetNumber(target.length);
         setlevel(level);
+        startTimer();
     }, [])
+
+    useEffect(() => {
+        gameOverCheck();
+    }, [found])
 
 
     return (
@@ -37,7 +44,7 @@ export const Game: React.FC<GameProps> = () => {
                 </Cover>
                 </OutsideClickHandler>
             </GameArea>
-            <SubmitScore time={10.00} show={gameOver}/>
+            <SubmitScore time={time!} show={gameOver} submitScore={submitScore}/>
 
         </GameWrapper>
     );
