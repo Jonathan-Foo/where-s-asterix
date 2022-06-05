@@ -66,7 +66,7 @@ export const useGame = () => {
 
     const fbLocationData = async () => {
         try {
-            const docRef = firestore.collection('game').doc(`lvl${level}`)
+            const docRef = firestore.collection('game').doc(`level${level}`)
             const docSnap = await getDoc(docRef);
             const {leaderboard, location} = docSnap.data()!
             return location;    
@@ -93,7 +93,7 @@ export const useGame = () => {
         const filter = new Filter();
         const filteredName = filter.clean(name);
         try {
-            const docRef = firestore.collection('game').doc(`lvl${level}`)
+            const docRef = firestore.collection('game').doc(`level${level}`)
             await updateDoc(docRef, {
                 leaderboard: arrayUnion({name: filteredName, time})
             });

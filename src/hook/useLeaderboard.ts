@@ -10,7 +10,7 @@ export const useLeaderboard = () => {
     const fbLeaderboard = async (level: number) => {
         try {
             
-            const docRef = firestore.collection('game').doc(`lvl${level}`)
+            const docRef = firestore.collection('game').doc(`level${level}`)
             const docSnap = await getDoc(docRef);
             const {leaderboard, location} = docSnap.data()!
             return leaderboard;    
